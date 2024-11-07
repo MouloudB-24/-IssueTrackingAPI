@@ -1,11 +1,11 @@
 from django.urls import path, include
-from rest_framework.routers import DefaultRouter
+from rest_framework.routers import SimpleRouter
 
 from projects.views import ProjectViewSet, ContributorViewSet
 
-router = DefaultRouter()
-router.register(r"projects", ProjectViewSet, basename="Projects")
-router.register(r"contributors", ContributorViewSet, basename="contributors")
+router = SimpleRouter()
+router.register("projects", ProjectViewSet, basename="Projects")
+router.register("contributors", ContributorViewSet, basename="contributors")
 
 
 urlpatterns = [

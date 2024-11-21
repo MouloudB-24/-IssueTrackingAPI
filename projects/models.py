@@ -5,12 +5,10 @@ from issuetracking.settings import AUTH_USER_MODEL
 
 class Project(models.Model):
 
-    TYPE_CHOICES = (
-        ('BACKEND', 'Backend'),
-        ('FRONTEND', 'Frontend'),
-        ('IOS', 'IOS'),
-        ('ANDROID', 'Android')
-    )
+    TYPE_CHOICES = (('BACKEND', 'Backend'),
+                    ('FRONTEND', 'Frontend'),
+                    ('IOS', 'IOS'),
+                    ('ANDROID', 'Android'))
 
     name = models.CharField(max_length=255)
     description = models.TextField()
@@ -29,10 +27,8 @@ class Project(models.Model):
 
 
 class Contributor(models.Model):
-    ROLE_CHOICES = (
-        ("AUTHOR", "Author"),
-        ("CONTRIBUTOR", "Contributor")
-    )
+    ROLE_CHOICES = (("AUTHOR", "Author"),
+                    ("CONTRIBUTOR", "Contributor"))
 
     user = models.ForeignKey(to=AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="contributions")
     project = models.ForeignKey(to=Project, on_delete=models.CASCADE, related_name="contributors")

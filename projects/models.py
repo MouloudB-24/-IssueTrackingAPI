@@ -23,10 +23,10 @@ class Project(models.Model):
         is_new = self.pk is None
         super().save(*args, **kwargs)
         if is_new:
-            Contributor.objects.create(user=self.author, project=self, role="AUTHOR")
+            Contribution.objects.create(user=self.author, project=self, role="AUTHOR")
 
 
-class Contributor(models.Model):
+class Contribution(models.Model):
     ROLE_CHOICES = (("AUTHOR", "Author"),
                     ("CONTRIBUTOR", "Contributor"))
 
@@ -41,7 +41,7 @@ class Contributor(models.Model):
         return f"{self.user.username} - {self.role} in {self.project.name}"
 
     def save(self, *args, **kwargs):
-        if self.role == "AUTHOR" and Contributor.objects.filter(project=self.project, role="AUTHOR"):
+        if self.role == "AUTHOR" and Contribution.objects.filter(project=self.project, role="AUTHOR"):
             raise ValueError("A project can have only one author.")
         super().save(*args, **kwargs)
 

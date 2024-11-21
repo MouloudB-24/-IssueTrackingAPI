@@ -5,7 +5,7 @@ from issues.models import Issue, Comment
 class IssueSerializer(ModelSerializer):
     class Meta:
         model = Issue
-        fields = ["id", "title", "description", "status", "priority", "tag", "time_created", "time_update", "project",
+        fields = ["id", "title", "description", "status", "priority", "tag", "time_created", "time_updated", "project",
                   "author", "assignee"]
 
 

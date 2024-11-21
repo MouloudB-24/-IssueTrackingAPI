@@ -8,5 +8,5 @@ router.register("issues", IssueViewSet, basename="Issues")
 router.register("comments", CommentViewSet, basename="Comments")
 
 urlpatterns = [
-    path('', include(router.urls))
+    path('', include(router.urls)),
 ]

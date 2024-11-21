@@ -8,5 +8,5 @@ router.register("projects", ProjectViewSet, basename="Projects")
 router.register("contributors", ContributorViewSet, basename="contributors")
 
 urlpatterns = [
-    path('', include(router.urls))
+    path('', include(router.urls)),
 ]

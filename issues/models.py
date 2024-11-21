@@ -2,7 +2,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 
 from issuetracking.settings import AUTH_USER_MODEL
-from projects.models import Project, Contributor
+from projects.models import Project, Contribution
 
 
 class Issue(models.Model):

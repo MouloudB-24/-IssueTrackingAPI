@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 
-from projects.models import Project, Contributor
+from projects.models import Project, Contribution
 from projects.serializers import ProjectSerializer, ContributorSerializer
 
 
@@ -11,6 +11,6 @@ class ProjectViewSet(ModelViewSet):
 
 class ContributorViewSet(ModelViewSet):
     serializer_class = ContributorSerializer
-    queryset = Contributor.objects.all()
+    queryset = Contribution.objects.all()
 
 

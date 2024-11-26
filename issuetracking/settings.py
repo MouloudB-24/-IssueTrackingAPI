@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     "users",
     "rest_framework",
     "projects",
-    "issues",
 ]
 
 MIDDLEWARE = [
@@ -127,3 +126,9 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "users.User"
+
+# Set the number of page to display
+REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 1,
+}

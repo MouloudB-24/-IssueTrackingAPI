@@ -19,4 +19,12 @@ les mesures de conceptions "green code" ?
 étudier la conception, et identifier les modèles d'objets
 
 
+Questions :
+
+- Est-il nécessaire de créer des fichiers urls.py par application ? Pourquoi ?
+- A quel endroit faut-il créer les méthodes des surcharges ? au niveau des modèles ou Serlializers ?
+- Le l'auteur de Issues ou Comment d'un projet doit être contributors de ce dernier, sinon afficher un message à l'utiliseur. 
+  Je me demande ou l'implémenter ?
+- 
+
     

@@ -130,5 +130,5 @@ AUTH_USER_MODEL = "users.User"
 # Set the number of page to display
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
-    "PAGE_SIZE": 1,
+    "PAGE_SIZE": 5,
 }

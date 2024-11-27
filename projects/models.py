@@ -32,7 +32,7 @@ class Contribution(models.Model):
                     ("CONTRIBUTOR", "Contributor"))
 
     user = models.ForeignKey(to=AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="contributions")
-    project = models.ForeignKey(to=Project, on_delete=models.CASCADE, related_name="contributors")
+    project = models.ForeignKey(to=Project, on_delete=models.CASCADE, related_name="contributions")
     role = models.CharField(max_length=30, choices=ROLE_CHOICES)
 
     class Meta:

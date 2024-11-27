@@ -1,37 +1,69 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, HyperlinkedIdentityField, SerializerMethodField
 
 from projects.models import Project, Contribution, Issue, Comment
+from users.serializers import UserListSerializer
 
 
-class ContributorSerializer(ModelSerializer):
+# -----1. Contributions ------
+class ContributionsSerializer(ModelSerializer):
+    user = UserListSerializer()
+    project = SerializerMethodField()
+
     class Meta:
         model = Contribution
         fields = ["id", "user", "project", "role"]
 
+    def get_project(self, obj):
+        return {'id': obj.project.id, 'name': obj.project.name}
 
-class IssueSerializer(ModelSerializer):
+
+# -----2. Issues ------
+class IssueListSerializer(ModelSerializer):
+    url = HyperlinkedIdentityField(view_name='issues-detail')
+
+    class Meta:
+        model = Issue
+        fields = ['id', 'title', 'url']
+
+
+class IssueDetailSerializer(ModelSerializer):
+    author = UserListSerializer()
+    assignee = UserListSerializer()
+    project = SerializerMethodField()
+
     class Meta:
         model = Issue
         fields = ["id", "title", "description", "status", "priority", "tag", "time_created", "time_updated", "project",
                   "author", "assignee"]
 
+    def get_project(self, obj):
+        return {'id': obj.project.id, 'name': obj.project.name}
 
+
+# -----3. Comments ------
 class CommentSerializer(ModelSerializer):
     class Meta:
         model = Comment
         fields = ["id", "content", "time_created", "issue", "author"]
 
 
-class ProjectSerializer(ModelSerializer):
-    issues = IssueSerializer(many=True)
+class ProjectListSerializer(ModelSerializer):
+    url = HyperlinkedIdentityField(view_name="projects-detail")
 
     class Meta:
         model = Project
-        fields = ["id", "name", "description", "type", "author", "time_created", "issues", "comments"]
+        fields = ["id", "name", "time_created", "url"]
 
-    #def save(self, **kwargs):
-        #import ipdb; ipdb.set_trace()
-        #return super().save(**kwargs)
+
+# -----4. Projects ------
+class ProjectDetailSerializer(ModelSerializer):
+    issues = IssueListSerializer(many=True)
+    contributions = ContributionsSerializer(many=True)
+
+    class Meta:
+        model = Project
+        fields = ["id", "name", "description", "type", "time_created", "issues", "contributions"]
+
 
 
 

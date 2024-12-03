@@ -4,7 +4,7 @@ from projects.models import Project, Contribution, Issue, Comment
 from users.serializers import UserListSerializer
 
 
-# -----1. Projects ------
+# ----- Projects ------
 class ProjectSerializer(ModelSerializer):
     #issues = IssueSerializer(many=True, read_only=True)
     #contributions = ContributionsSerializer(many=True, read_only=True)
@@ -14,15 +14,16 @@ class ProjectSerializer(ModelSerializer):
         fields = ["id", "name", "description", "type", "author", "time_created"]
 
 
-# -----2. Contributions ------
+# ----- Contributions ------
 class ContributionsSerializer(ModelSerializer):
 
     class Meta:
         model = Contribution
-        fields = ["id", "user", "role"]
+        fields = ["id", "user", 'project', "role"]
+        read_only_fields = ['project']
 
 
-# -----3. Issues ------
+# ----- Issues ------
 class IssueSerializer(ModelSerializer):
 
     class Meta:
@@ -31,7 +32,7 @@ class IssueSerializer(ModelSerializer):
                   "author", "assignee"]
 
 
-# -----4. Comments ------
+# ----- Comments ------
 class CommentSerializer(ModelSerializer):
 
     class Meta:

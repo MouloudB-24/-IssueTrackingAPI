@@ -20,9 +20,27 @@ class ProjectViewSet(ModelViewSet):
         return super().get_serializer_class()"""
 
 
-class ContributorViewSet(ModelViewSet):
+# ----- Contributions ------
+class ProjectContributionsView(ListCreateAPIView):
     serializer_class = ps.ContributionsSerializer
-    queryset = Contribution.objects.all()
+
+    def get_queryset(self):
+        project_id = self.kwargs.get('project_pk')
+        return Contribution.objects.filter(project_id=project_id)
+
+    def perform_create(self, serializer):
+        project_id = self.kwargs.get('project_pk')
+        try:
+            project = Project.objects.get(id=project_id)
+
+            user_to_add = serializer.validated_data['user']
+            if Contribution.objects.filter(project=project, user=user_to_add).exists():
+                raise ValueError("This use is already a contributor to this project")
+
+            serializer.save(project=project)
+
+        except Project.DoesNotExist:
+            raise NotFound(f"Project {project_id} not found")
 
 
 class ProjectIssuesView(ListCreateAPIView):

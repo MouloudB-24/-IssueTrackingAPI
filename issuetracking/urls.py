@@ -19,12 +19,13 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from projects.views import ProjectIssuesView, ProjectIssueCommentsView, ProjectIssueDetailView, ProjectIssueCommentDetailView
+from projects.views import ProjectIssuesView, ProjectIssueCommentsView, ProjectIssueDetailView, ProjectIssueCommentDetailView, ProjectContributionsView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/users/', include('users.urls')),
     path('api/projects/', include('projects.urls')),
+    path("api/projects/<int:project_pk>/contributions/", ProjectContributionsView.as_view(), name="contributions"),
     path("api/projects/<int:project_pk>/issues/", ProjectIssuesView.as_view(), name="issues"),
     path("api/projects/<int:project_pk>/issues/<int:issue_pk>/", ProjectIssueDetailView.as_view(), name="issue-detail"),
     path("api/projects/<int:project_pk>/issues/<int:issue_pk>/comments/", ProjectIssueCommentsView.as_view(), name="comments"),

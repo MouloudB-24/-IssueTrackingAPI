@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from projects.views import ProjectIssuesView, ProjectIssueCommentsView, ProjectIssueCommentDetailView, ProjectContributionsView, ProjectIssueInstanceView
+from projects.views import ProjectIssuesView, ProjectIssueCommentsView, ProjectIssueCommentInstanceView, ProjectContributionsView, ProjectIssueInstanceView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,7 +30,7 @@ urlpatterns = [
     path("api/projects/<int:project_pk>/issues/", ProjectIssuesView.as_view(), name="issues"),
     path("api/projects/<int:project_pk>/issues/<int:issue_pk>/", ProjectIssueInstanceView.as_view(), name="issue-detail"),
     path("api/projects/<int:project_pk>/issues/<int:issue_pk>/comments/", ProjectIssueCommentsView.as_view(), name="comments"),
-    path("api/projects/<int:project_pk>/issues/<int:issue_pk>/comments/<int:comment_pk>/", ProjectIssueCommentDetailView.as_view(), name="comment-detail"),
+    path("api/projects/<int:project_pk>/issues/<int:issue_pk>/comments/<int:comment_pk>/", ProjectIssueCommentInstanceView.as_view(), name="comment-detail"),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 
 import projects.serializers as ps
 from projects.models import Project, Contribution, Issue, Comment
-from projects.permissions import IsAuthorOrReadOnly, IsIssueParticipant, IsCommentProjectParticipant
+from projects.permissions import IsAuthorProjectOrReadOnly, IsAuthorIssueOrReadOnly, IsAuthorCommentOrReadOnly
 from rest_framework.exceptions import NotFound, PermissionDenied
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 
@@ -12,7 +12,7 @@ from rest_framework.generics import RetrieveUpdateDestroyAPIView
 # ----- Projects ------
 class ProjectViewSet(ModelViewSet):
     serializer_class = ps.ProjectSerializer
-    permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
+    permission_classes = [IsAuthenticated, IsAuthorProjectOrReadOnly]
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
@@ -26,7 +26,7 @@ class ProjectViewSet(ModelViewSet):
 # ----- Contributions ------
 class ProjectContributionsView(ListCreateAPIView):
     serializer_class = ps.ContributionsSerializer
-    permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
+    permission_classes = [IsAuthenticated, IsAuthorProjectOrReadOnly]
 
     def get_queryset(self):
         project_id = self.kwargs.get('project_pk')
@@ -51,7 +51,7 @@ class ProjectContributionsView(ListCreateAPIView):
 
 
 class ProjectIssuesView(ListCreateAPIView):
-    permission_classes = [IsAuthenticated, IsIssueParticipant]
+    permission_classes = [IsAuthenticated, IsAuthorIssueOrReadOnly]
 
     def get_queryset(self):
         # Filter issues by project
@@ -74,21 +74,25 @@ class ProjectIssuesView(ListCreateAPIView):
 
 
 class ProjectIssueInstanceView(RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated, IsIssueParticipant]
+    permission_classes = [IsAuthenticated, IsAuthorIssueOrReadOnly]
     serializer_class = ps.IssueDetailSerializer
 
     def get_object(self):
         project_id = self.kwargs.get('project_pk')
         issue_id = self.kwargs.get('issue_pk')
         try:
-            return Issue.objects.get(project_id=project_id, id=issue_id)
+            issue = Issue.objects.get(project_id=project_id, id=issue_id)
 
         except Issue.DoesNotExist:
             raise NotFound(f"Issue {issue_id} not found in project {project_id}")
 
+        self.check_object_permissions(self.request, issue)
+        return issue
+
 
 class ProjectIssueCommentsView(ListCreateAPIView):
     serializer_class = ps.CommentSerializer
+    permission_classes = [IsAuthenticated, IsAuthorCommentOrReadOnly]
 
     def get_queryset(self):
         # Filter comments by issue
@@ -107,15 +111,23 @@ class ProjectIssueCommentsView(ListCreateAPIView):
         serializer.save(issue=issue)
 
 
-class ProjectIssueCommentDetailView(RetrieveUpdateDestroyAPIView):
+class ProjectIssueCommentInstanceView(RetrieveUpdateDestroyAPIView):
     serializer_class = ps.CommentSerializer
+    permission_classes = [IsAuthenticated, IsAuthorCommentOrReadOnly]
 
     def get_object(self):
         issue_id = self.kwargs.get('issue_pk')
         comment_id = self.kwargs.get('comment_pk')
 
         try:
-            return Comment.objects.get(issue_id=issue_id, id=comment_id)
+            comment = Comment.objects.get(issue_id=issue_id, id=comment_id)
 
         except Comment.DoesNotExist:
             raise NotFound(f"Comment {comment_id} not found in issue {issue_id}")
+
+        self.check_object_permissions(self.request, comment)
+        return comment
+
+
+
+

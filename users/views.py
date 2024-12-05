@@ -9,7 +9,7 @@ class UserViewSet(ModelViewSet):
     serializer_class = UserListSerializer
     detail_serializer_class = UserDetailSerializer
     queryset = User.objects.all()  # ajouter les filtres
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
         if self.action == 'retrieve':

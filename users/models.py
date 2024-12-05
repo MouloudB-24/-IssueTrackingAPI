@@ -9,7 +9,7 @@ class User(AbstractUser):
     time_created = models.DateTimeField(auto_now_add=True)
 
     USERNAME_FIELD = "username"
-    REQUIRED_FIELDS = ["email", "age"]
+    REQUIRED_FIELDS = ["age"]
 
     def __str__(self):
         return self.username

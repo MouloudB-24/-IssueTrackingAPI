@@ -27,4 +27,12 @@ Questions :
   Je me demande ou l'implémenter ?
 - 
 
-    
+
+
+issue :
+"title": "issue5",
+"description": "ras",
+"priority": "LOW",
+"tag": "BUG",
+"project": 32,
+"author": 60

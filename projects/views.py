@@ -4,25 +4,29 @@ from rest_framework.permissions import IsAuthenticated
 
 import projects.serializers as ps
 from projects.models import Project, Contribution, Issue, Comment
-from projects.permissions import IsAuthorOrReadOnly, IsContributor
-from rest_framework.exceptions import NotFound
+from projects.permissions import IsAuthorOrReadOnly, IsIssueParticipant, IsCommentProjectParticipant
+from rest_framework.exceptions import NotFound, PermissionDenied
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 
 
+# ----- Projects ------
 class ProjectViewSet(ModelViewSet):
     serializer_class = ps.ProjectSerializer
-    queryset = Project.objects.all()
-    #permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
+    permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
 
-    """def get_serializer_class(self):
-        if self.action == "retrieve" or self.action == "create" or self.action == "update":
-            return self.detail_serializer_class
-        return super().get_serializer_class()"""
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            return Project.objects.filter(contributions__user=self.request.user).distinct()
+        return Project.objects.none()
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
 
 # ----- Contributions ------
 class ProjectContributionsView(ListCreateAPIView):
     serializer_class = ps.ContributionsSerializer
+    permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
 
     def get_queryset(self):
         project_id = self.kwargs.get('project_pk')
@@ -37,6 +41,9 @@ class ProjectContributionsView(ListCreateAPIView):
             if Contribution.objects.filter(project=project, user=user_to_add).exists():
                 raise ValueError("This use is already a contributor to this project")
 
+            if not project.contributions.filter(user=self.request.user, role="AUTHOR").exists():
+                raise PermissionDenied("Only project author can add contributors.")
+
             serializer.save(project=project)
 
         except Project.DoesNotExist:
@@ -44,28 +51,38 @@ class ProjectContributionsView(ListCreateAPIView):
 
 
 class ProjectIssuesView(ListCreateAPIView):
-    serializer_class = ps.IssueSerializer
-    #permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
+    permission_classes = [IsAuthenticated, IsIssueParticipant]
 
     def get_queryset(self):
         # Filter issues by project
         project_id = self.kwargs.get('project_pk')
         return Issue.objects.filter(project_id=project_id)
 
+    def get_serializer_class(self):
+        return ps.IssueListSerializer
+
     def perform_create(self, serializer):
         # Associate issue with project
         project_id = self.kwargs.get('project_pk')
-        serializer.save(project_id=project_id)
+
+        try:
+            project = Project.objects.get(id=project_id)
+            serializer.save(project=project, author=self.request.user)
+
+        except Project.DoesNotExist:
+            raise NotFound(f"Project {project_id} not found.")
 
 
-class ProjectIssueDetailView(RetrieveUpdateDestroyAPIView):
-    serializer_class = ps.IssueSerializer
+class ProjectIssueInstanceView(RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated, IsIssueParticipant]
+    serializer_class = ps.IssueDetailSerializer
 
     def get_object(self):
         project_id = self.kwargs.get('project_pk')
         issue_id = self.kwargs.get('issue_pk')
         try:
             return Issue.objects.get(project_id=project_id, id=issue_id)
+
         except Issue.DoesNotExist:
             raise NotFound(f"Issue {issue_id} not found in project {project_id}")
 

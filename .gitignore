@@ -1,3 +1,7 @@
 .idea/
 ressources/
 */migrations/
+.DS_Store
+.Pipfile
+.Pipfile.lock
+

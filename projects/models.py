@@ -74,16 +74,6 @@ class Issue(models.Model):
     def __str__(self):
         return f"{self.title} - {self.get_status_display()}"
 
-    """def clean(self):
-        if self.project.author != self.author:
-            print(self.project.author, self.author)
-
-            raise ValidationError("L'auteur de l'issue doit être un contributeur ou auteur de projet")
-
-    def save(self, *args, **kwargs):
-        self.clean()
-        super().save(*args, **kwargs)"""
-
 
 class Comment(models.Model):
     issue = models.ForeignKey(to=Issue, on_delete=models.CASCADE, related_name="Comments")

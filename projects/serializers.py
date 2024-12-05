@@ -6,13 +6,11 @@ from users.serializers import UserListSerializer
 
 # ----- Projects ------
 class ProjectSerializer(ModelSerializer):
-    #issues = IssueDetailSerializer(many=True, read_only=True)
-    #contributions = ContributionsSerializer(many=True, read_only=True)
 
     class Meta:
         model = Project
-        fields = ["id", "name", "description", "type", "time_created"]
-        #read_only_fields = ["author"]
+        fields = ["id", "name", "description", "type", "author", "time_created"]
+        read_only_fields = ["author"]
 
 
 # ----- Contributions ------
@@ -21,7 +19,7 @@ class ContributionsSerializer(ModelSerializer):
     class Meta:
         model = Contribution
         fields = ["id", "user", 'project', "role"]
-        read_only_fields = ['project']
+        read_only_fields = ['project', 'role']
 
 
 # ----- Issues ------
@@ -37,7 +35,8 @@ class IssueDetailSerializer(ModelSerializer):
     class Meta:
         model = Issue
         fields = ["id", "title", "description", "status", "priority", "tag", "time_created", "time_updated", "project",
-                  "author", "assignee"]
+                  'author', "assignee"]
+        read_only_fields = ['author', 'project']
 
 
 # ----- Comments ------

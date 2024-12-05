@@ -24,7 +24,7 @@ class ProjectViewSet(ModelViewSet):
 
 
 # ----- Contributions ------
-class ProjectContributionsView(ListCreateAPIView):
+class ContributionsView(ListCreateAPIView):
     serializer_class = ps.ContributionsSerializer
     permission_classes = [IsAuthenticated, IsAuthorProjectOrReadOnly]
 
@@ -36,21 +36,13 @@ class ProjectContributionsView(ListCreateAPIView):
         project_id = self.kwargs.get('project_pk')
         try:
             project = Project.objects.get(id=project_id)
-
-            user_to_add = serializer.validated_data['user']
-            if Contribution.objects.filter(project=project, user=user_to_add).exists():
-                raise ValueError("This use is already a contributor to this project")
-
-            if not project.contributions.filter(user=self.request.user, role="AUTHOR").exists():
-                raise PermissionDenied("Only project author can add contributors.")
-
-            serializer.save(project=project)
+            serializer.save(project=project, role="CONTRIBUTOR")
 
         except Project.DoesNotExist:
             raise NotFound(f"Project {project_id} not found")
 
 
-class ProjectIssuesView(ListCreateAPIView):
+class IssuesView(ListCreateAPIView):
     permission_classes = [IsAuthenticated, IsAuthorIssueOrReadOnly]
 
     def get_queryset(self):
@@ -59,6 +51,8 @@ class ProjectIssuesView(ListCreateAPIView):
         return Issue.objects.filter(project_id=project_id)
 
     def get_serializer_class(self):
+        if self.request.method == "POST" or self.request.method == "PUT":
+            return ps.IssueDetailSerializer
         return ps.IssueListSerializer
 
     def perform_create(self, serializer):
@@ -73,7 +67,7 @@ class ProjectIssuesView(ListCreateAPIView):
             raise NotFound(f"Project {project_id} not found.")
 
 
-class ProjectIssueInstanceView(RetrieveUpdateDestroyAPIView):
+class IssueInstanceView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, IsAuthorIssueOrReadOnly]
     serializer_class = ps.IssueDetailSerializer
 
@@ -90,7 +84,7 @@ class ProjectIssueInstanceView(RetrieveUpdateDestroyAPIView):
         return issue
 
 
-class ProjectIssueCommentsView(ListCreateAPIView):
+class CommentsView(ListCreateAPIView):
     serializer_class = ps.CommentSerializer
     permission_classes = [IsAuthenticated, IsAuthorCommentOrReadOnly]
 
@@ -111,7 +105,7 @@ class ProjectIssueCommentsView(ListCreateAPIView):
         serializer.save(issue=issue)
 
 
-class ProjectIssueCommentInstanceView(RetrieveUpdateDestroyAPIView):
+class CommentInstanceView(RetrieveUpdateDestroyAPIView):
     serializer_class = ps.CommentSerializer
     permission_classes = [IsAuthenticated, IsAuthorCommentOrReadOnly]
 

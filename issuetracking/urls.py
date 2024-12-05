@@ -19,18 +19,18 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from projects.views import ProjectIssuesView, ProjectIssueCommentsView, ProjectIssueCommentInstanceView, ProjectContributionsView, ProjectIssueInstanceView
+from projects.views import IssuesView, CommentsView, CommentInstanceView, ContributionsView, IssueInstanceView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/users/', include('users.urls')),
     path('api/projects/', include('projects.urls')),
-    path("api/projects/<int:project_pk>/contributions/", ProjectContributionsView.as_view(), name="contributions"),
-    path("api/projects/<int:project_pk>/contributions/<int:contribution_pk>/", ProjectContributionsView.as_view(), name="contribution-detail"),
-    path("api/projects/<int:project_pk>/issues/", ProjectIssuesView.as_view(), name="issues"),
-    path("api/projects/<int:project_pk>/issues/<int:issue_pk>/", ProjectIssueInstanceView.as_view(), name="issue-detail"),
-    path("api/projects/<int:project_pk>/issues/<int:issue_pk>/comments/", ProjectIssueCommentsView.as_view(), name="comments"),
-    path("api/projects/<int:project_pk>/issues/<int:issue_pk>/comments/<int:comment_pk>/", ProjectIssueCommentInstanceView.as_view(), name="comment-detail"),
+    path("api/projects/<int:project_pk>/contributions/", ContributionsView.as_view(), name="contributions"),
+    path("api/projects/<int:project_pk>/contributions/<int:contribution_pk>/", ContributionsView.as_view(), name="contribution-detail"),
+    path("api/projects/<int:project_pk>/issues/", IssuesView.as_view(), name="issues"),
+    path("api/projects/<int:project_pk>/issues/<int:issue_pk>/", IssueInstanceView.as_view(), name="issue-detail"),
+    path("api/projects/<int:project_pk>/issues/<int:issue_pk>/comments/", CommentsView.as_view(), name="comments"),
+    path("api/projects/<int:project_pk>/issues/<int:issue_pk>/comments/<int:comment_pk>/", CommentInstanceView.as_view(), name="comment-detail"),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

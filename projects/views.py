@@ -99,10 +99,11 @@ class CommentsView(ListCreateAPIView):
         issue_id = self.kwargs.get('issue_pk')
         try:
             issue = Issue.objects.get(project_id=project_id, id=issue_id)
+            serializer.save(issue=issue, author=self.request.user)
+
         except Issue.DoesNotExist:
             raise NotFound(f"Issue {issue_id} not found in project {project_id}")
 
-        serializer.save(issue=issue)
 
 
 class CommentInstanceView(RetrieveUpdateDestroyAPIView):

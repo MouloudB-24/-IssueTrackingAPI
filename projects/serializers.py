@@ -38,6 +38,10 @@ class IssueDetailSerializer(ModelSerializer):
                   'author', "assignee"]
         read_only_fields = ['author', 'project']
 
+    # Ajouter un filtre pour assignee et
+    """def validate_assignee(self):
+        return super().validate(self)"""
+
 
 # ----- Comments ------
 class CommentSerializer(ModelSerializer):
@@ -45,5 +49,6 @@ class CommentSerializer(ModelSerializer):
     class Meta:
         model = Comment
         fields = ["id", "content", "time_created", "issue", "author"]
+        read_only_fields = ['issue', 'author']
 
 

@@ -1,8 +1,12 @@
+from pprint import pprint
+
+from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer, HyperlinkedIdentityField, SerializerMethodField
 
 from projects.models import Project, Contribution, Issue, Comment
 from users.serializers import UserListSerializer
 
+import pdb
 
 # ----- Projects ------
 class ProjectSerializer(ModelSerializer):
@@ -37,10 +41,18 @@ class IssueDetailSerializer(ModelSerializer):
         fields = ["id", "title", "description", "status", "priority", "tag", "time_created", "time_updated", "project",
                   'author', "assignee"]
         read_only_fields = ['author', 'project']
+        extra_kwargs = {'assignee': {'required': True}}
 
-    # Ajouter un filtre pour assignee et
-    """def validate_assignee(self):
-        return super().validate(self)"""
+    def validate_assignee(self, value):
+
+        # Get current project ID
+        project = self.context['view'].kwargs.get('project_pk')
+
+        if not Contribution.objects.filter(project=project, user=value).exists():
+            raise serializers.ValidationError(f"User {value} is not a contributor to project {project}.")
+
+        return value
+
 
 
 # ----- Comments ------

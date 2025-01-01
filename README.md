@@ -1,38 +1,25 @@
-# HelpDeskAPI
+# Projet : Créer une API performante et sécurisée Restful en utilisant Django REST
 
-API : Application Programming Interface 
+Ce projet a été réalisé en novembre 2024 dans le cadre de la formation **"Développeur d'Application Python"** 
+d'[Openclassrooms](https://openclassrooms.com/fr/paths/879-developpeur-dapplication-python) . 
 
-Endpoints : url sur laquellle on réalise les différentes d'appels HTTP
-(GET, POST, PATCH, DELETE). 
-
-DRF : Django Rest Framework
-
-ORM (Object Relational Mapping): Il sert à représenter et à faire persister les données métier dans
-notre système d'informatiom
-SolfDesk une société d'étition des logiciels de collaborations
-
-- Une application permettant de remonter et suivre des problèmes techniques "API RESTful"
-
-Json Web Token (JWT)?
-les mesures de conceptions "green code" ?
-
-étudier la conception, et identifier les modèles d'objets
+## Description :
+Cette API est conçu pour gérer les problèmes techniques. Elle permet à ses utilisateurs de remonter et suivre
+des problèmes tehniques qu'ils recontrent de manière efficace et sécurisée.
 
 
-Questions :
+# Fonctionnalités et mode d'exploitation
+**Créer une projet (project) :** Un utilisateur peut créer un projet X sur lequel il souhaite apporter une modification.
 
-- Est-il nécessaire de créer des fichiers urls.py par application ? Pourquoi ?
-- A quel endroit faut-il créer les méthodes des surcharges ? au niveau des modèles ou Serlializers ?
-- Le l'auteur de Issues ou Comment d'un projet doit être contributors de ce dernier, sinon afficher un message à l'utiliseur. 
-  Je me demande ou l'implémenter ?
-- 
+**Créer une tache (issue) :** L'auteur ou les contributeurs d'un projet X peuvent créer une tâche Y (Bug, feature ou task)
+qui'ils souhaite corriger ou implémenter
 
+**Créer un commentaire (comment) :** L'auteur ou les contributeurs d'un projet X peuvent commenter une tâche Y.
 
+## Installation :
 
-issue :
-"title": "issue5",
-"description": "ras",
-"priority": "LOW",
-"tag": "BUG",
-"project": 32,
-"author": 60
+Merci de suivre ces étapes :
+1. Clonez le dossier : `git clone git@github.com:MouloudB-24/-IssueTrackingAPI.git`
+2. Créer et activer un environnement virtuel : `python -m venv venv` & `source venv/bin/activate`
+2. Installez les dépendances : `pip install -r requirements.txt`
+3. Lancer le server : `python manage.py runserver`

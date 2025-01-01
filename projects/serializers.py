@@ -1,12 +1,8 @@
-from pprint import pprint
-
 from rest_framework import serializers
-from rest_framework.serializers import ModelSerializer, HyperlinkedIdentityField, SerializerMethodField
+from rest_framework.serializers import ModelSerializer
 
 from projects.models import Project, Contribution, Issue, Comment
-from users.serializers import UserListSerializer
 
-import pdb
 
 # ----- Projects ------
 class ProjectSerializer(ModelSerializer):
@@ -44,7 +40,6 @@ class IssueDetailSerializer(ModelSerializer):
         extra_kwargs = {'assignee': {'required': True}}
 
     def validate_assignee(self, value):
-
         # Get current project ID
         project = self.context['view'].kwargs.get('project_pk')
 
@@ -52,7 +47,6 @@ class IssueDetailSerializer(ModelSerializer):
             raise serializers.ValidationError(f"User {value} is not a contributor to project {project}.")
 
         return value
-
 
 
 # ----- Comments ------
